@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CloudFront Analytics Dashboard</title>
+    <style>
+      .drop-zone {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 999;
+        display: none;
+        background: rgba(0, 0, 0, 0.8);
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+      .drop-zone.initial {
+        display: flex;
+      }
+      .drop-zone.dragover {
+        display: flex;
+        background: rgba(0, 0, 0, 0.9);
+      }
+      .drop-zone-content {
+        padding: 40px;
+        background: white;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 90%;
+        transition: transform 0.2s ease;
+      }
+      .drop-zone.dragover .drop-zone-content {
+        transform: scale(1.02);
+      }
+      .drop-zone-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #3498db;
+      }
+      .drop-zone-title {
+        font-size: 24px;
+        margin-bottom: 10px;
+        color: #2c3e50;
+      }
+      .drop-zone-message {
+        color: #7f8c8d;
+        margin-bottom: 20px;
+      }
+      .drop-zone-button {
+        background: #3498db;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+      .drop-zone-button:hover {
+        background: #2980b9;
+      }
+      .dashboard {
+        filter: blur(0);
+        transition: filter 0.3s ease;
+      }
+      .dashboard.blurred {
+        filter: blur(4px);
+      }
+      /* Small floating button to trigger file input */
+      .floating-upload {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #3498db;
+        color: white;
+        border: none;
+        width: 56px;
+        height: 56px;
+        border-radius: 28px;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        transition: transform 0.3s ease;
+        z-index: 1000;
+      }
+      .floating-upload:hover {
+        transform: scale(1.1);
+      }
+      .drop-zone-content.simple {
+        padding: 30px;
+        background: rgba(255, 255, 255, 0.95);
+      }
+      .drop-zone-content.simple .drop-zone-icon {
+        margin-bottom: 10px;
+      }
+      .drop-zone-content.simple .drop-zone-message {
+        margin-bottom: 0;
+        font-size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="drop-zone initial">
+      <div class="drop-zone-content">
+        <div class="drop-zone-icon">📊</div>
+        <h2 class="drop-zone-title">Welcome to CloudFront Analytics</h2>
+        <p class="drop-zone-message">Drop your CloudFront logs file here (JSON or CSV) or click to browse</p>
+        <button class="drop-zone-button">Select File</button>
+      </div>
+    </div>
+    <div class="drop-zone dragover-zone">
+      <div class="drop-zone-content simple">
+        <div class="drop-zone-icon">📄</div>
+        <p class="drop-zone-message">Drop to analyze new file</p>
+      </div>
+    </div>
+    <button class="floating-upload" title="Upload new file">📤</button>
+    <div class="dashboard blurred">
+      <h1>CloudFront Analytics Dashboard</h1>
+      <div class="search-container">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search logs by path, user agent, referer, or location..."
+        />
+      </div>
+      <div class="stats-container">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h4>Total Requests</h4>
+            <p id="total-requests">No data</p>
+          </div>
+          <div class="stat-card">
+            <h4>Unique Visitors</h4>
+            <p id="unique-visitors">No data</p>
+          </div>
+          <div class="stat-card">
+            <h4>Data Transferred</h4>
+            <p id="data-transferred">No data</p>
+          </div>
+          <div class="stat-card">
+            <h4>Time Range</h4>
+            <p id="time-range">No data</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="chart large full-width" id="visitorsTime"></div>
+          <div class="chart-container full-width">
+            <h2>Geographic Distribution</h2>
+            <div id="map"></div>
+          </div>
+          <div class="chart" id="topPaths"></div>
+          <div class="chart" id="topReferers"></div>
+          <div class="chart" id="topUserAgents"></div>
+          <div class="chart" id="edgeLocations"></div>
+          <div class="chart" id="browserDistribution"></div>
+          <div class="chart" id="statusCodes"></div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
