@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "build:all": "npm run fetch:data && npm run build",
     "preview": "vite preview"
   },
   "devDependencies": {
